@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+main:
+  web-application-type: servlet
+
+spring:
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        max-page-size: 50
+        one-indexed-parameters: true
+  datasource:
+    url: jdbc:postgresql://localhost:5431/umabikerental
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
