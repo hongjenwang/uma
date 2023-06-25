@@ -19,5 +19,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
        WHERE r.bike.id = :bikeId AND (r.start_date < :end_date AND r.end_date > :start_date)
        """)
     Integer getTotalReservedBikes(@Param("bikeId") Long bikeId, @Param("start_date") LocalDateTime start_date, @Param("end_date") LocalDateTime end_date);
+
+    List<Reservation> findByBikeIdAndUserId(Long bikeId, Long userId);
 }
 

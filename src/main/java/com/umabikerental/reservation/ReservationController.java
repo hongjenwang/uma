@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -36,6 +38,17 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.getReservationsByBike(bikeId);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
+
+    @PostMapping("/return")
+    public ResponseEntity<String> returnBike(
+            @RequestParam("bikeId") Long bikeId,
+            @RequestParam("userId") Long userId,
+            @RequestParam("returnDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime returnDate) {
+
+        reservationService.returnBike(bikeId, userId, returnDate);
+        return ResponseEntity.ok("Bike returned successfully.");
+    }
+
 
     @DeleteMapping("/{id}")
     public void deleteReservationById(@PathVariable Long id) {

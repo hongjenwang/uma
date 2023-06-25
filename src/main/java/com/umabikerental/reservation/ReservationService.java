@@ -39,11 +39,27 @@ public class ReservationService {
             throw new NotEnoughBikesAvailableException("Not enough bikes available for the requested period.");
         }
 
-        return reservationRepository.save(new Reservation(bike, user, start_date, end_date, quantity));
+        bike.setIsAvailable(false); // Set isAvailable to false
+
+        Reservation reservation = new Reservation(bike, user, start_date, end_date, quantity);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        return savedReservation;
     }
 
+    public void returnBike(Long bikeId, Long userId, LocalDateTime returnDate) {
+        List<Reservation> reservations = reservationRepository.findByBikeIdAndUserId(bikeId, userId);
+        if (reservations.isEmpty()) {
+            throw new ResourceNotFoundException("No reservation found for bikeId: " + bikeId + " and userId: " + userId);
+        }
 
+        Reservation reservation = reservations.get(0);
+        reservationRepository.delete(reservation);
 
+        Bike bike = reservation.getBike();
+        bike.setIsAvailable(true);
+        bikeRepository.save(bike);
+    }
 
     public List<Reservation> getReservationsByPage(Pageable pageable) {
         return reservationRepository.findAll(pageable).toList();

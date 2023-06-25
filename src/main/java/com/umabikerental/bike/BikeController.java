@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import com.umabikerental.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +44,22 @@ public class BikeController {
     {
         long availableBikes = bikeService.getAvailableBikes(id, start_date, end_date);
         return ResponseEntity.ok(availableBikes);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<Bike>> getAllAvailableBikes() {
+        try {
+            List<Bike> availableBikes = bikeService.getAllAvailableBikes();
+            return new ResponseEntity<>(availableBikes, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Bike> updateBike(@PathVariable("id") Long id, @RequestBody Bike updatedBike) {
+        Bike bike = bikeService.updateBike(id, updatedBike);
+        return ResponseEntity.ok(bike);
     }
 
 }

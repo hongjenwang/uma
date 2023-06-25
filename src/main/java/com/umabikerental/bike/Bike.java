@@ -20,7 +20,7 @@ public class Bike {
 
     @Id
     @SequenceGenerator(
-            name="bike_id_sequence",
+            name = "bike_id_sequence",
             sequenceName = "bike_id_sequence"
     )
     @GeneratedValue(
@@ -32,6 +32,13 @@ public class Bike {
     private String name;
     private Integer quantity;
     private String color;
+    private Double cost;
+    private String type;
+
+    @Column(unique = true)
+    private String serialNumber;
+
+    private Boolean isAvailable = true;
 
     @Column(nullable = false, updatable = false)
     @CreatedDate
@@ -44,10 +51,13 @@ public class Bike {
     public Bike() {
     }
 
-    public Bike(Long id, String name, Integer quantity, String color) {
+    public Bike(Long id, String name, Integer quantity, String color, Double cost, String type, String serialNumber) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.color = color;
+        this.cost = cost;
+        this.type = type;
+        this.serialNumber = serialNumber;
     }
 }
