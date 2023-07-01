@@ -57,13 +57,25 @@ public class Reservation {
     @LastModifiedDate
     private LocalDateTime modified_at;
 
+    @Column(nullable = false)
+    private String dropOffLocation;
+
+    @Column(nullable = false)
+    private String pickUpLocation;
+
+    public LocalDateTime getReservationDate() {
+        return start_date;
+    }
+
     public Reservation() {}
 
-    public Reservation(Bike bike, User user, LocalDateTime start_date, LocalDateTime end_date, Integer quantity) {
+    public Reservation(Bike bike, User user, LocalDateTime start_date, LocalDateTime end_date, Integer quantity, String dropOffLocation, String pickUpLocation) {
         this.bike = bike;
         this.user = user;
         this.start_date = start_date;
         this.end_date = end_date;
         this.quantity = quantity;
+        this.dropOffLocation = dropOffLocation;
+        this.pickUpLocation = pickUpLocation;
     }
 }

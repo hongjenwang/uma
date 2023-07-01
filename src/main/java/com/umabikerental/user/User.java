@@ -1,6 +1,7 @@
 package com.umabikerental.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter
@@ -32,7 +32,19 @@ public class User {
 
     private String name;
 
+    @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
+    private String username;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @JsonProperty("isAdmin") // Map isAdmin field to "admin" JSON property
+    private boolean isAdmin;
+
+    private String phoneNumber;
 
     @Column(nullable = false, updatable = false)
     @CreatedDate
@@ -44,10 +56,13 @@ public class User {
 
     public User() {}
 
-    public User(Long id, String name, String email) {
+    public User(Long id, String name, String email, String username, Role role, boolean isAdmin, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.username = username;
+        this.role = role;
+        this.isAdmin = isAdmin;
+        this.phoneNumber = phoneNumber;
     }
 }
-

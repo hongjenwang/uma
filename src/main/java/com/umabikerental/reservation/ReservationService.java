@@ -22,8 +22,10 @@ public class ReservationService {
     private BikeRepository bikeRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PastReservationRepository pastReservationRepository;
 
-    public Reservation createReservation(ReservationRequest reservationRequest) {
+    public Reservation createReservation(ReservationRequest reservationRequest, String dropOffLocation, String pickUpLocation) {
         Bike bike = bikeRepository.findById(reservationRequest.getBikeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bike not found with id: " + reservationRequest.getBikeId()));
         User user = userRepository.findById(reservationRequest.getUserId())
@@ -41,7 +43,7 @@ public class ReservationService {
 
         bike.setIsAvailable(false); // Set isAvailable to false
 
-        Reservation reservation = new Reservation(bike, user, start_date, end_date, quantity);
+        Reservation reservation = new Reservation(bike, user, start_date, end_date, quantity, dropOffLocation, pickUpLocation);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return savedReservation;
@@ -59,6 +61,14 @@ public class ReservationService {
         Bike bike = reservation.getBike();
         bike.setIsAvailable(true);
         bikeRepository.save(bike);
+
+        // Save the reservation information into the PastReservation entity
+        PastReservation pastReservation = new PastReservation(bike, reservation.getUser(), reservation.getReservationDate(), returnDate);
+        pastReservationRepository.save(pastReservation);
+    }
+
+    public List<PastReservation> getAllPastReservations() {
+        return pastReservationRepository.findAll();
     }
 
     public List<Reservation> getReservationsByPage(Pageable pageable) {

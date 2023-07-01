@@ -18,8 +18,10 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @PostMapping
-    public Reservation createReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
-        return reservationService.createReservation(reservationRequest);
+    public Reservation createReservation(@Valid @RequestBody ReservationRequest reservationRequest,
+                                         @RequestParam("dropOffLocation") String dropOffLocation,
+                                         @RequestParam("pickUpLocation") String pickUpLocation) {
+        return reservationService.createReservation(reservationRequest, dropOffLocation, pickUpLocation);
     }
 
     @GetMapping
@@ -49,6 +51,11 @@ public class ReservationController {
         return ResponseEntity.ok("Bike returned successfully.");
     }
 
+    @GetMapping("/past")
+    public ResponseEntity<List<PastReservation>> getAllPastReservations() {
+        List<PastReservation> pastReservations = reservationService.getAllPastReservations();
+        return new ResponseEntity<>(pastReservations, HttpStatus.OK);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteReservationById(@PathVariable Long id) {
